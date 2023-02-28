@@ -1,15 +1,18 @@
-
 import requests
+from tqdm import tqdm
 class YaUploader:
+
     def __init__(self):
         self.token = input('Введите токен YandexDisk: ')
         self.yandex_folder = input('Введите название яндекс-папки: ')
         self.new_folder()
+
     def get_headers(self):
         return {
             'Content-Type': 'application/json',
             'Authorization': 'OAuth {}'.format(self.token)
         }
+
     def new_folder(self):
         headers = self.get_headers()
         url = "https://cloud-api.yandex.net/v1/disk/resources"
@@ -19,6 +22,7 @@ class YaUploader:
             print(f'Папка с именем: {self.yandex_folder} уже существует!')
         else:
             print(f'Папка: {self.yandex_folder} создана на Yandex disk')
+
     def upload_file_to_disk(self, file_path, url):
         headers = self.get_headers()
         upload_url = "https://cloud-api.yandex.net/v1/disk/resources/upload"
@@ -32,3 +36,7 @@ class YaUploader:
     def get_foto(self, file_name, url):
         file_path = self.yandex_folder + '/' + file_name
         self.upload_file_to_disk(file_path, url)
+
+    def upload_file(self, foto_list):
+        for fotos in tqdm(foto_list):
+            self.get_foto(fotos['file_name'], fotos['url'])
